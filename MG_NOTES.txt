@@ -1,0 +1,17 @@
+## Notes about the app from debugging prcocess
+
+# having trouble with the dynamic updating of the UI (Took it out and it works) 
+# would like to just make it print something like thank you for the submission when it gets the data 
+
+# make a column with the just the image filename not the path or extension. 
+
+# how to let people acces via there phone (and submit iphone images)  
+
+## counter.py problem (still works but want to fix)
+
+/home/biouser/CRICKET_PROJECT/counter.py:77: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+
+# Will want to make a the print and messages go to a log file.

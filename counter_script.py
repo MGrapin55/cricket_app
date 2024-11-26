@@ -7,7 +7,7 @@ import pandas as pd
 
 UPLOAD_FOLDER = "uploads"
 PROCESSED_FOLDER = "processed"
-METADATA_FILE = "metadata.csv"
+METADATA_FILE = "submissions.csv"
 UPDATED_METADATA_FILE = "updated_metadata.csv"
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
