@@ -3,6 +3,7 @@ import os
 from datetime import date  # Import to get today's date
 
 UPLOAD_FOLDER = "uploads"
+CSV_FILE = "submissions.csv"  # Define the path to the CSV file
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Define UI
@@ -34,25 +35,50 @@ def server(input, output, session):
     @reactive.event(input.submit)
     def handle_upload():
         uploaded_file = input.file_input()
-        selected_option = input.radio()  # Get the selected radio button value
-        selected_date = input.date1()    # Get the selected date
+        selected_option = input.radio()
+        selected_date = input.date1()
+        technician = input.technician()
+        description = input.description()
         
         if uploaded_file is None:
             output.status.set("No file uploaded!")
             return
         
-        # Save uploaded file
+        # Save the uploaded file
         file_path = os.path.join(UPLOAD_FOLDER, uploaded_file["name"])
         with open(file_path, "wb") as f:
             f.write(uploaded_file["datapath"].read_bytes())
         
-        # Display the form data
+        # Create a DataFrame for the new entry
+        new_entry = pd.DataFrame([{
+            "File Path": file_path,
+            "Date": selected_date,
+            "Technician": technician,
+            "Description": description,
+            "Selected Option": selected_option
+        }])
+
+        # Check if the CSV file exists
+        if os.path.exists(CSV_FILE):
+            # Load the existing CSV file
+            existing_data = pd.read_csv(CSV_FILE)
+            # Append the new entry
+            updated_data = pd.concat([existing_data, new_entry], ignore_index=True)
+        else:
+            # Start with the new entry if the file doesn't exist
+            updated_data = new_entry
+
+        # Save the updated DataFrame to the CSV file
+        updated_data.to_csv(CSV_FILE, index=False)
+
+        # Update the status output
         output.status.set(
             f"File saved: {file_path}\n"
             f"Date: {selected_date}\n"
-            f"Technician: {input.technician()}\n"
-            f"Description: {input.description()}\n"
-            f"Selected Option: {selected_option}"
+            f"Technician: {technician}\n"
+            f"Description: {description}\n"
+            f"Selected Option: {selected_option}\n"
+            f"Submission saved to {CSV_FILE}"
         )
 
 # Run the App
